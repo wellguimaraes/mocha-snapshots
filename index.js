@@ -124,13 +124,19 @@ module.exports = function(mochaContext) {
       target = clearClassNames(toJson(target));
     }
 
-    if (!fs.existsSync(snapshotDir))
+    if (!fs.existsSync(snapshotDir)) {
+      if (process.env.CI)
+        throw new Error('Snapshots can\'t be created on CI environment');
+
       fs.mkdirSync(snapshotDir);
+    }
 
     var snaps = {};
 
     if (fs.existsSync(snapshotFilePath))
       snaps = require(snapshotFilePath);
+    else if (process.env.CI)
+      throw new Error('Snapshots can\'t be created on CI environment');
 
     const neutralizedWhat = normalize(target);
 
@@ -150,6 +156,9 @@ module.exports = function(mochaContext) {
         }
       }
     } else {
+      if (process.env.CI)
+        throw new Error('Snapshots can\'t be created on CI environment');
+
       snaps[ testName ] = neutralizedWhat;
       persist(snaps, snapshotFilePath);
     }

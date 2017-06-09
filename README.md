@@ -22,3 +22,8 @@ describe('<MyComponent />', () => {
   });
 });
 ```
+
+## Update snapshots
+Set an environment variable `UPDATE` and run your test script:
+
+ex: `UPDATE=1 npm test`
