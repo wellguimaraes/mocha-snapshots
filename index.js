@@ -110,6 +110,11 @@ function clearClassNames(target) {
 
 }
 
+function checkCI() {
+  if (process.env.CI)
+    throw new Error('Snapshots can\'t be created on CI environment');
+}
+
 module.exports = function(mochaContext) {
   return function(what) {
     const dirName          = path.dirname(mochaContext.test.file);
@@ -125,9 +130,7 @@ module.exports = function(mochaContext) {
     }
 
     if (!fs.existsSync(snapshotDir)) {
-      if (process.env.CI)
-        throw new Error('Snapshots can\'t be created on CI environment');
-
+      checkCI();
       fs.mkdirSync(snapshotDir);
     }
 
@@ -135,8 +138,8 @@ module.exports = function(mochaContext) {
 
     if (fs.existsSync(snapshotFilePath))
       snaps = require(snapshotFilePath);
-    else if (process.env.CI)
-      throw new Error('Snapshots can\'t be created on CI environment');
+    else
+      checkCI();
 
     const neutralizedWhat = normalize(target);
 
@@ -156,8 +159,7 @@ module.exports = function(mochaContext) {
         }
       }
     } else {
-      if (process.env.CI)
-        throw new Error('Snapshots can\'t be created on CI environment');
+      checkCI();
 
       snaps[ testName ] = neutralizedWhat;
       persist(snaps, snapshotFilePath);
