@@ -4,7 +4,7 @@ const colors         = require('colors/lib/colors');
 const jsDiff         = require('diff');
 const ShallowWrapper = require('enzyme').ShallowWrapper;
 const ReactWrapper   = require('enzyme').ReactWrapper;
-const toJson         = require('enzyme-to-json');
+const toJson         = require('enzyme-to-json').default;
 
 var lastTestName  = '';
 var testNameIndex = 0;
@@ -46,9 +46,10 @@ function normalize(obj) {
     return obj.name || '[function]';
 
   if (typeof obj === 'object')
-    return Object.keys(obj).reduce(function(prev, curr) {
-      if (/^$$/.test(curr)) return prev;
-      prev[ curr ] = normalize(obj[ curr ]);
+    return Object.keys(obj).reduce(function(prev, key) {
+      if (/^$$/.test(key)) return prev;
+
+      prev[ key ] = normalize(obj[ key ]);
       return prev;
     }, {});
 
@@ -67,7 +68,7 @@ function persist(snaps, snapshotFilePath) {
 
 function getPrintableDiff(diff) {
   var output = '\n\n';
-  
+
   var prependAddition = prependLines('  + ');
   var prependRemoval  = prependLines('  - ');
 
@@ -82,6 +83,33 @@ function getPrintableDiff(diff) {
   return output;
 }
 
+function clearClassNames(target) {
+  if (target === null)
+    return null;
+
+  if (target === undefined)
+    return undefined;
+
+  if (Array.isArray(target))
+    return target.map(function(it) { return clearClassNames(it) });
+
+  if (typeof target === 'function')
+    return target;
+
+  if (typeof target === 'object')
+    return Object.keys(target).reduce(function(prev, key) {
+      if (/className/i.test(key) && typeof target[ key ] === 'string')
+        prev[ key ] = target[ key ].replace(/\d/g, '');
+      else
+        prev[ key ] = clearClassNames(target[ key ]);
+
+      return prev;
+    }, {});
+
+  return target;
+
+}
+
 module.exports = function(mochaContext) {
   return function(what) {
     const dirName          = path.dirname(mochaContext.test.file);
@@ -93,7 +121,7 @@ module.exports = function(mochaContext) {
     var target = what;
 
     if (target instanceof ShallowWrapper || target instanceof ReactWrapper) {
-      target = toJson(target);
+      target = clearClassNames(toJson(target));
     }
 
     if (!fs.existsSync(snapshotDir))
