@@ -1,0 +1,35 @@
+{
+  "name": "mocha-snapshots",
+  "version": "1.0.0",
+  "description": "Snapshot testing for Mocha users",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wellguimaraes/mocha-snapshots.git"
+  },
+  "keywords": [
+    "mocha",
+    "snapshot",
+    "regression",
+    "test",
+    "testing"
+  ],
+  "author": "Wellington Guimaraes <wellguimaraes@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wellguimaraes/mocha-snapshots/issues"
+  },
+  "homepage": "https://github.com/wellguimaraes/mocha-snapshots#readme",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "diff": "^3.2.0",
+    "enzyme-to-json": "^1.5.1"
+  },
+  "peerDependencies": {
+    "enzyme": "^2.8.2",
+    "react": "^15.5.4"
+  }
+}
