@@ -1,5 +1,5 @@
 # Mocha Snapshots
-Snapshot/regression testing for using with Mocha, specially for React / Enzyme users.
+Snapshot/regression testing for using with Mocha, specially for React+Enzyme users.
 
 \* _Jest is cool but too slow!_
 
