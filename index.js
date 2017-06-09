@@ -6,6 +6,9 @@ const ShallowWrapper = require('enzyme').ShallowWrapper;
 const ReactWrapper   = require('enzyme').ReactWrapper;
 const toJson         = require('enzyme-to-json').default;
 
+const snapshotExtension = '.mocha-snapshot';
+const snapshotsFolder   = '__snapshots__';
+
 var lastTestName  = '';
 var testNameIndex = 0;
 
@@ -56,7 +59,7 @@ function normalize(obj) {
   return obj;
 }
 
-function persist(snaps, snapshotFilePath) {
+function persistSnaps(snaps, snapshotFilePath) {
   const snapsFileContent = Object
     .keys(snaps)
     .reduce(function(prev, curr) {
@@ -115,44 +118,50 @@ function checkCI() {
     throw new Error('Snapshots can\'t be created on CI environment');
 }
 
+function getExistingSnaps(snapshotDir, snapshotFilePath) {
+  var snaps = {};
+
+  if (!fs.existsSync(snapshotDir)) {
+    checkCI();
+    fs.mkdirSync(snapshotDir);
+  }
+
+  if (fs.existsSync(snapshotFilePath))
+    snaps = require(snapshotFilePath);
+  else
+    checkCI();
+
+  return snaps;
+}
+
+function getNormalizedTarget(target) {
+  if (target instanceof ShallowWrapper || target instanceof ReactWrapper)
+    target = clearClassNames(toJson(target));
+
+  target = normalize(target);
+
+  return target;
+}
+
 module.exports = function(mochaContext) {
   return function(what) {
     const dirName          = path.dirname(mochaContext.test.file);
     const fileName         = path.basename(mochaContext.test.file);
-    const snapshotDir      = path.join(dirName, '__snapshots__');
-    const snapshotFilePath = path.join(snapshotDir, fileName + '.mocha-snapshot');
+    const snapshotDir      = path.join(dirName, snapshotsFolder);
+    const snapshotFilePath = path.join(snapshotDir, fileName + snapshotExtension);
     const testName         = getTestName(mochaContext);
 
-    var target = what;
-
-    if (target instanceof ShallowWrapper || target instanceof ReactWrapper) {
-      target = clearClassNames(toJson(target));
-    }
-
-    if (!fs.existsSync(snapshotDir)) {
-      checkCI();
-      fs.mkdirSync(snapshotDir);
-    }
-
-    var snaps = {};
-
-    if (fs.existsSync(snapshotFilePath))
-      snaps = require(snapshotFilePath);
-    else
-      checkCI();
-
-    const neutralizedWhat = normalize(target);
+    var snaps  = getExistingSnaps(snapshotDir, snapshotFilePath);
+    var target = getNormalizedTarget(what);
 
     if (snaps.hasOwnProperty(testName)) {
-      const result    = jsDiff.diffLines(stringify(snaps[ testName ]), stringify(neutralizedWhat));
-      const didChange = result.some(function(it) {
-        return it.removed || it.added
-      });
+      const result    = jsDiff.diffLines(stringify(snaps[ testName ]), stringify(target));
+      const didChange = result.some(function(it) { return it.removed || it.added });
 
       if (didChange) {
         if (process.env.UPDATE) {
-          snaps[ testName ] = neutralizedWhat;
-          persist(snaps, snapshotFilePath);
+          snaps[ testName ] = target;
+          persistSnaps(snaps, snapshotFilePath);
         } else {
           const output = getPrintableDiff(result);
           throw new Error('Snapshot didn\'t match' + output);
@@ -161,8 +170,8 @@ module.exports = function(mochaContext) {
     } else {
       checkCI();
 
-      snaps[ testName ] = neutralizedWhat;
-      persist(snaps, snapshotFilePath);
+      snaps[ testName ] = target;
+      persistSnaps(snaps, snapshotFilePath);
     }
   }
 };
