@@ -5,8 +5,14 @@ const clearClassNames = require('./clearClassNames');
 const normalize       = require('./normalize');
 
 module.exports = function(target) {
-  if (target instanceof ShallowWrapper || target instanceof ReactWrapper)
-    target = clearClassNames(toJson(target));
+  let shouldClearClassNames = target instanceof ShallowWrapper || target instanceof ReactWrapper;
 
-  return normalize(target);
+  if (shouldClearClassNames)
+    target = toJson(target);
+
+  target = normalize(target);
+
+  return shouldClearClassNames
+    ? clearClassNames(target)
+    : target;
 };
