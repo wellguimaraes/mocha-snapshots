@@ -13,7 +13,7 @@ import { shallow } from 'enzyme';
 import MyComponent from './path/to/MyComponent';
 
 describe('<MyComponent />', () => {
-  it('should match snapshot', function() { // Arrow functions are not allowed here
+  it('should match snapshot', () => {
     const wrapper = shallow(<MyComponent />)
     expect(wrapper).to.matchSnapshot();
     expect('you can match strings').to.matchSnapshot();
