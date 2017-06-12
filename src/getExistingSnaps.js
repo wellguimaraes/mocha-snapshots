@@ -1,8 +1,8 @@
 const fs      = require('fs');
 const checkCI = require('./checkCI');
 
-module.exports = function getExistingSnaps(snapshotDir, snapshotFilePath) {
-  var snaps = {};
+module.exports = function(snapshotDir, snapshotFilePath) {
+  let snaps = {};
 
   if (!fs.existsSync(snapshotDir)) {
     checkCI();

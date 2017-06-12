@@ -9,7 +9,7 @@ const persistSnaps        = require('./persistSnaps');
 const snapshotExtension = '.mocha-snapshot';
 const snapshotsFolder   = '__snapshots__';
 
-module.exports = function matchSnapshot(what, currentContext) {
+module.exports = function(what, currentContext) {
   const dirName          = path.dirname(currentContext.runnable.file);
   const fileName         = path.basename(currentContext.runnable.file);
   const snapshotDir      = path.join(dirName, snapshotsFolder);
@@ -24,7 +24,7 @@ module.exports = function matchSnapshot(what, currentContext) {
     const newSnap      = stringify(target);
     const diffResult   = jsDiff.diffLines(existingSnap, newSnap);
 
-    snapDidChange = diffResult.some(function(it) { return it.removed || it.added });
+    snapDidChange = diffResult.some(it => it.removed || it.added);
 
     if (snapDidChange && !process.env.UPDATE) {
       const output = getPrintableDiff(diffResult);

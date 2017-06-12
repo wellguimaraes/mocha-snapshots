@@ -1,19 +1,18 @@
 const prependLines = require('./prependLines');
 const colors       = require('colors/lib/colors');
 
-module.exports = function getPrintableDiff(diff) {
-  var output = '\n\n';
+module.exports = function(diff) {
+  let printable         = '\n\n';
+  const prependAddition = prependLines('  + ');
+  const prependRemoval  = prependLines('  - ');
 
-  var prependAddition = prependLines('  + ');
-  var prependRemoval  = prependLines('  - ');
-
-  diff.forEach(function(it) {
+  diff.forEach(it => {
     if (it.added || it.removed) {
-      output += it.added
+      printable += it.added
         ? colors.green(prependAddition(it.value))
         : colors.red(prependRemoval(it.value))
     }
   });
 
-  return output;
+  return printable;
 };

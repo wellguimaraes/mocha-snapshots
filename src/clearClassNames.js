@@ -5,10 +5,7 @@ module.exports = function clearClassNames(target) {
   if (Array.isArray(target))
     return target.map(it => clearClassNames(it));
 
-  if (typeof target === 'function')
-    return target;
-
-  if (typeof target === 'object')
+  if (typeof target === 'object') {
     return Object.keys(target).reduce((prev, key) => {
       let isClassNameProp = /className/i.test(key) && typeof target[ key ] === 'string';
 
@@ -18,6 +15,7 @@ module.exports = function clearClassNames(target) {
 
       return prev;
     }, {});
+  }
 
   return target;
 };
