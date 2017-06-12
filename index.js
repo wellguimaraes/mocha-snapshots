@@ -1,32 +1,34 @@
-const path           = require('path');
-const fs             = require('fs');
-const colors         = require('colors/lib/colors');
-const jsDiff         = require('diff');
-const ShallowWrapper = require('enzyme').ShallowWrapper;
-const ReactWrapper   = require('enzyme').ReactWrapper;
-const toJson         = require('enzyme-to-json').default;
-
+const path              = require('path');
+const fs                = require('fs');
+const colors            = require('colors/lib/colors');
+const jsDiff            = require('diff');
+const ShallowWrapper    = require('enzyme').ShallowWrapper;
+const ReactWrapper      = require('enzyme').ReactWrapper;
+const toJson            = require('enzyme-to-json').default;
+const Runnable          = require('mocha/lib/runnable');
+const chai              = require('chai');
+const originalRun       = Runnable.prototype.run;
 const snapshotExtension = '.mocha-snapshot';
 const snapshotsFolder   = '__snapshots__';
 
-var lastTestName  = '';
-var testNameIndex = 0;
+var currentTestName  = '';
+var currentNameIndex = 0;
+var currentRunnable  = null;
+
+Runnable.prototype.run = function() {
+  currentRunnable  = this;
+  currentTestName  = this.title;
+  currentNameIndex = 0;
+
+  return originalRun.apply(this, arguments);
+};
 
 function stringify(obj) {
   return JSON.stringify(obj, null, '  ');
 }
 
-function getTestName(mochaContext) {
-  var testName = mochaContext.test.fullTitle();
-
-  if (lastTestName === testName) {
-    testNameIndex++;
-  } else {
-    testNameIndex = 0;
-    lastTestName  = testName;
-  }
-
-  return testName + '(' + testNameIndex + ')';
+function getTestName() {
+  return currentTestName + '(' + (currentNameIndex++) + ')';
 }
 
 function prependLines(prefix) {
@@ -143,35 +145,42 @@ function getNormalizedTarget(target) {
   return target;
 }
 
-module.exports = function(mochaContext) {
-  return function(what) {
-    const dirName          = path.dirname(mochaContext.test.file);
-    const fileName         = path.basename(mochaContext.test.file);
-    const snapshotDir      = path.join(dirName, snapshotsFolder);
-    const snapshotFilePath = path.join(snapshotDir, fileName + snapshotExtension);
-    const testName         = getTestName(mochaContext);
+function matchSnapshot(what) {
+  const dirName          = path.dirname(currentRunnable.file);
+  const fileName         = path.basename(currentRunnable.file);
+  const snapshotDir      = path.join(dirName, snapshotsFolder);
+  const snapshotFilePath = path.join(snapshotDir, fileName + snapshotExtension);
+  const testName         = getTestName();
 
-    var snaps  = getExistingSnaps(snapshotDir, snapshotFilePath);
-    var target = getNormalizedTarget(what);
+  var snaps  = getExistingSnaps(snapshotDir, snapshotFilePath);
+  var target = getNormalizedTarget(what);
 
-    if (snaps.hasOwnProperty(testName)) {
-      const result    = jsDiff.diffLines(stringify(snaps[ testName ]), stringify(target));
-      const didChange = result.some(function(it) { return it.removed || it.added });
+  if (snaps.hasOwnProperty(testName)) {
+    const result    = jsDiff.diffLines(stringify(snaps[ testName ]), stringify(target));
+    const didChange = result.some(function(it) { return it.removed || it.added });
 
-      if (didChange) {
-        if (process.env.UPDATE) {
-          snaps[ testName ] = target;
-          persistSnaps(snaps, snapshotFilePath);
-        } else {
-          const output = getPrintableDiff(result);
-          throw new Error('Snapshot didn\'t match' + output);
-        }
+    if (didChange) {
+      if (process.env.UPDATE) {
+        snaps[ testName ] = target;
+        persistSnaps(snaps, snapshotFilePath);
+      } else {
+        const output = getPrintableDiff(result);
+        throw new Error('Snapshot didn\'t match' + output);
       }
-    } else {
-      checkCI();
-
-      snaps[ testName ] = target;
-      persistSnaps(snaps, snapshotFilePath);
     }
+  } else {
+    checkCI();
+
+    snaps[ testName ] = target;
+    persistSnaps(snaps, snapshotFilePath);
   }
-};
+}
+
+global.matchSnapshot = matchSnapshot;
+
+if (chai) {
+  chai.util.addMethod(chai.Assertion.prototype, 'matchSnapshot', function() {
+    var obj = chai.util.flag(this, 'object');
+    matchSnapshot(obj);
+  });
+}

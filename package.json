@@ -1,6 +1,6 @@
 {
   "name": "mocha-snapshots",
-  "version": "1.1.1",
+  "version": "2.2.0",
   "description": "Snapshot testing for Mocha users",
   "main": "index.js",
   "scripts": {
@@ -29,7 +29,9 @@
     "enzyme-to-json": "^1.5.1"
   },
   "peerDependencies": {
+    "mocha": "^3.1.2",
     "enzyme": "^2.8.2",
-    "react": "^15.5.4"
+    "react": "^15.5.4",
+    "chai": "^4.0.2"
   }
 }

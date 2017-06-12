@@ -8,20 +8,25 @@ Snapshot/regression testing for using with Mocha, specially for React+Enzyme use
 
 ## Use it
 ```es6
-import matchSnapshots from 'mocha-snapshots';
+import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import MyComponent from './path/to/MyComponent';
 
 describe('<MyComponent />', () => {
   it('should match snapshot', function() { // Arrow functions are not allowed here
     const wrapper = shallow(<MyComponent />)
-    matchSnapshot(this)(wrapper);
-    matchSnapshot(this)('you can match strings');
-    matchSnapshot(this)(123); // numbers too
-    matchSnapshot(this)({ a: 1, b: { c: 1 } }); // or any object
+    expect(wrapper).to.matchSnapshot();
+    expect('you can match strings').to.matchSnapshot();
+    expect(123).to.matchSnapshot(); // numbers too
+    expect({ a: 1, b: { c: 1 } }).to.matchSnapshot(); // or any object
   });
 });
 ```
+
+## Run your tests
+Add a require argument to your test script/command 
+
+`mocha --require mocha-snapshots`
 
 ## Update snapshots
 Set an environment variable `UPDATE` and run your test script:
