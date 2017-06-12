@@ -10,7 +10,7 @@ module.exports = function clearClassNames(target) {
       let isClassNameProp = /className/i.test(key) && typeof target[ key ] === 'string';
 
       prev[ key ] = isClassNameProp
-        ? target[ key ].replace(/\d/g, '')
+        ? target[ key ].replace(/[-_]\w+/g, '')
         : clearClassNames(target[ key ]);
 
       return prev;

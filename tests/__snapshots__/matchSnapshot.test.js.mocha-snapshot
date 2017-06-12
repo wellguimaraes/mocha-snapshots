@@ -1,7 +1,7 @@
 exports["should match snapshots(0)"] = {
   "type": "div",
   "props": {
-    "className": "abc--"
+    "className": "abc"
   },
   "children": [
     "Lorem Ipsum dolor"
