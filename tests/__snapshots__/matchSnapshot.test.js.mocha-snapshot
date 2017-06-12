@@ -1,0 +1,19 @@
+exports["should match snapshots(0)"] = {
+  "type": "div",
+  "props": {
+    "className": "abc--"
+  },
+  "children": [
+    "Lorem Ipsum dolor"
+  ]
+};
+
+exports["should match snapshots(1)"] = 123;
+
+exports["should match snapshots(2)"] = {
+  "a": 1,
+  "b": {
+    "c": "lorem"
+  }
+};
+
