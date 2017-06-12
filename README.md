@@ -17,8 +17,8 @@ describe('<MyComponent />', () => {
     const wrapper = shallow(<MyComponent />)
     expect(wrapper).to.matchSnapshot();
     expect('you can match strings').to.matchSnapshot();
-    expect(123).to.matchSnapshot(); // numbers too
     expect({ a: 1, b: { c: 1 } }).to.matchSnapshot(); // or any object
+    expect(123).to.matchSnapshot(); // and numbers too
   });
 });
 ```

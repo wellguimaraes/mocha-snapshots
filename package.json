@@ -1,6 +1,6 @@
 {
   "name": "mocha-snapshots",
-  "version": "2.2.0",
+  "version": "2.2.2",
   "description": "Snapshot testing for Mocha users",
   "main": "index.js",
   "scripts": {
