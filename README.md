@@ -15,10 +15,19 @@ import MyComponent from './path/to/MyComponent';
 describe('<MyComponent />', () => {
   it('should match snapshot', () => {
     const wrapper = shallow(<MyComponent />)
+    
+    // You can match Enzyme wrappers
     expect(wrapper).to.matchSnapshot();
+    
+    // Strings
     expect('you can match strings').to.matchSnapshot();
-    expect({ a: 1, b: { c: 1 } }).to.matchSnapshot(); // or any object
-    expect(123).to.matchSnapshot(); // and numbers too
+    
+    // Numbers
+    expect(123).to.matchSnapshot();
+    
+    // Or any object
+    expect({ a: 1, b: { c: 1 } }).to.matchSnapshot();
+   
   });
 });
 ```
