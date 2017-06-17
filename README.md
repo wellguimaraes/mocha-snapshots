@@ -1,8 +1,6 @@
 # Mocha Snapshots
 Snapshot/regression testing for using with Mocha, specially for React+Enzyme users.
 
-\* _Jest is cool but too slow!_
-
 ## Install it
 `npm i mocha-snapshots --save`
 
