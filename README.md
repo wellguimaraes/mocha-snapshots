@@ -36,6 +36,12 @@ Add a require argument to your test script/command
 `mocha --require mocha-snapshots`
 
 ## Update snapshots
-Set an environment variable `UPDATE` and run your test script:
+Set an environment variable `UPDATE` and run your test script or add the flag `--update`  when running Mocha:
 
-ex: `UPDATE=1 npm test`
+```
+UPDATE=1 mocha --require mocha-snapshots
+``` 
+or
+```
+mocha --require mocha-snapshots --update
+```
