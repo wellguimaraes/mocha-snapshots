@@ -35,6 +35,14 @@ Add a require argument to your test script/command
 
 `mocha --require mocha-snapshots`
 
+## Disable classNames cleanup
+To prevent false mismatches, mocha-snapshots sanitizes className props by default. You can disable this behavior before running your tests:
+```js
+import mochaSnapshots from 'mocha-snapshots';
+
+mochaSnapshots.setup({ sanitizeClassNames: false })
+```
+
 ## Update snapshots
 Set an environment variable `UPDATE` and run your test script or add the flag `--update`  when running Mocha:
 

@@ -1,18 +1,21 @@
-const ShallowWrapper  = require('enzyme').ShallowWrapper;
-const ReactWrapper    = require('enzyme').ReactWrapper;
-const toJson          = require('enzyme-to-json').default;
-const clearClassNames = require('./clearClassNames');
-const normalize       = require('./normalize');
+const ShallowWrapper  = require('enzyme').ShallowWrapper
+const ReactWrapper    = require('enzyme').ReactWrapper
+const toJson          = require('enzyme-to-json').default
+const clearClassNames = require('./clearClassNames')
+const normalize       = require('./normalize')
+const getOptions      = require('./setup').getOptions
 
-module.exports = function(target) {
-  let shouldClearClassNames = target instanceof ShallowWrapper || target instanceof ReactWrapper;
+module.exports = function (value) {
+  const options = getOptions()
 
-  if (shouldClearClassNames)
-    target = toJson(target);
+  const isReactComponent      = value instanceof ShallowWrapper || value instanceof ReactWrapper
+  const shouldClearClassNames = options.sanitizeClassNames && isReactComponent
 
-  target = normalize(target);
+  if (shouldClearClassNames) {
+    return clearClassNames(normalize(toJson(value)))
+  }
 
-  return shouldClearClassNames
-    ? clearClassNames(target)
-    : target;
-};
+  return isReactComponent
+    ? normalize(toJson(value))
+    : normalize(value)
+}

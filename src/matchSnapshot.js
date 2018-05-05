@@ -10,14 +10,14 @@ const snapshotExtension     = '.mocha-snapshot'
 const snapshotsFolder       = '__snapshots__'
 const shouldUpdateSnapshots = process.env.UPDATE || process.argv.includes('--update')
 
-module.exports = function (what, currentContext) {
-  const dirName          = path.dirname(currentContext.runnable.file)
-  const fileName         = path.basename(currentContext.runnable.file)
+module.exports = function (value, context) {
+  const dirName          = path.dirname(context.runnable.file)
+  const fileName         = path.basename(context.runnable.file)
   const snapshotDir      = path.join(dirName, snapshotsFolder)
   const snapshotFilePath = path.join(snapshotDir, fileName + snapshotExtension)
-  const testName         = currentContext.title + '(' + (currentContext.titleIndex++) + ')'
+  const testName         = context.title + '(' + (context.titleIndex++) + ')'
   const snaps            = getExistingSnaps(snapshotDir, snapshotFilePath)
-  const target           = getNormalizedTarget(what)
+  const target           = getNormalizedTarget(value)
 
   let snapDidChange = true
 

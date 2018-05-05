@@ -17,3 +17,13 @@ exports["should match snapshots(2)"] = {
   }
 };
 
+exports["should match snapshots without classNames sanitization(0)"] = {
+  "type": "div",
+  "props": {
+    "className": "abc-123-45"
+  },
+  "children": [
+    "Lorem Ipsum dolor"
+  ]
+};
+
