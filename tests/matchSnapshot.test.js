@@ -15,6 +15,20 @@ function MyReactComponent() {
 }
 
 describe('matchSnapshot', () => {
+  describe('multiple tests with same it() title', () => {
+    describe('title one', () => {
+      it('should match snapshot', () => {
+        expect(123).to.matchSnapshot()
+      })
+    })
+
+    describe('title two', () => {
+      it('should match snapshot', () => {
+        expect(321).to.matchSnapshot()
+      })
+    })
+  })
+
   it('should match snapshots', () => {
     const wrapper = shallow(<MyReactComponent/>)
 

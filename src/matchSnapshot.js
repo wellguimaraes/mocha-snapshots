@@ -5,6 +5,7 @@ const getPrintableDiff    = require('./getPrintableDiff')
 const getExistingSnaps    = require('./getExistingSnaps')
 const getNormalizedTarget = require('./getNormalizedTarget')
 const persistSnaps        = require('./persistSnaps')
+const getTestName         = require('./getTestName')
 
 const snapshotExtension     = '.mocha-snapshot'
 const snapshotsFolder       = '__snapshots__'
@@ -15,7 +16,7 @@ module.exports = function (value, context) {
   const fileName         = path.basename(context.runnable.file)
   const snapshotDir      = path.join(dirName, snapshotsFolder)
   const snapshotFilePath = path.join(snapshotDir, fileName + snapshotExtension)
-  const testName         = context.title + '(' + (context.titleIndex++) + ')'
+  const testName         = getTestName(context) + '(' + (context.titleIndex++) + ')'
   const snaps            = getExistingSnaps(snapshotDir, snapshotFilePath)
   const target           = getNormalizedTarget(value)
 
