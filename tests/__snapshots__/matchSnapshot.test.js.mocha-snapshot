@@ -1,4 +1,13 @@
-exports["should match snapshots(0)"] = {
+exports["matchSnapshot/should match snapshots(0)"] = {
+  "node": {
+    "nodeType": "host",
+    "type": "div",
+    "props": {
+      "className": "abc",
+      "children": "Lorem Ipsum dolor"
+    },
+    "rendered": "Lorem Ipsum dolor"
+  },
   "type": "div",
   "props": {
     "className": "abc"
@@ -8,16 +17,25 @@ exports["should match snapshots(0)"] = {
   ]
 };
 
-exports["should match snapshots(1)"] = 123;
+exports["matchSnapshot/should match snapshots(1)"] = 123;
 
-exports["should match snapshots(2)"] = {
+exports["matchSnapshot/should match snapshots(2)"] = {
   "a": 1,
   "b": {
     "c": "lorem"
   }
 };
 
-exports["should match snapshots without classNames sanitization(0)"] = {
+exports["matchSnapshot/should match snapshots without classNames sanitization(0)"] = {
+  "node": {
+    "nodeType": "host",
+    "type": "div",
+    "props": {
+      "className": "abc-123-45",
+      "children": "Lorem Ipsum dolor"
+    },
+    "rendered": "Lorem Ipsum dolor"
+  },
   "type": "div",
   "props": {
     "className": "abc-123-45"
@@ -26,4 +44,8 @@ exports["should match snapshots without classNames sanitization(0)"] = {
     "Lorem Ipsum dolor"
   ]
 };
+
+exports["matchSnapshot/multiple tests with same it() title/title one/should match snapshot(0)"] = 123;
+
+exports["matchSnapshot/multiple tests with same it() title/title two/should match snapshot(0)"] = 321;
 
