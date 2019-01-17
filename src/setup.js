@@ -1,9 +1,13 @@
-const _options = {
-  sanitizeClassNames: true
-}
+const defaultOptions = () => ({
+  sanitizeClassNames: true,
+  normalize: true,
+  stringifyFunction: JSON.stringify
+})
+
+const _options = defaultOptions()
 
 module.exports.setup = (options) => {
-  _options.sanitizeClassNames = options.sanitizeClassNames
+  Object.assign(_options, defaultOptions(), options)
 }
 
 module.exports.getOptions = () => _options

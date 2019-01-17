@@ -1,0 +1,13 @@
+exports["setup disable normalize/should match snapshots with normalize disabled(0)"] = {
+  "length": 1
+};
+
+exports["setup disable normalize/should match snapshots with normalize disabled(1)"] = 123;
+
+exports["setup disable normalize/should match snapshots with normalize disabled(2)"] = {
+  "a": 1,
+  "b": {
+    "c": "lorem"
+  }
+};
+
