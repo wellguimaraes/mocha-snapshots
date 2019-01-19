@@ -9,7 +9,12 @@ module.exports = function stringify(obj, native = false) {
   if (native) {
     return JSON.stringify(obj, ignoreNulls, '  ')
   } else {
-    let json = getOptions().stringifyFunction(obj, ignoreNulls, '  ')
-    return JSON.stringify(JSON.parse(json), ignoreNulls, '  ')
+    let fn = getOptions().stringifyFunction
+    if(fn === JSON.stringify) {
+      return JSON.stringify(obj, ignoreNulls, '  ')
+    } else {
+      let json = getOptions().stringifyFunction(obj, ignoreNulls, '  ')
+      return JSON.stringify(JSON.parse(json), ignoreNulls, '  ')
+    }
   }
 };
