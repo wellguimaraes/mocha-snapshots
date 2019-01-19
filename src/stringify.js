@@ -6,6 +6,10 @@ function ignoreNulls(key, value) {
 }
 
 module.exports = function stringify(obj, native = false) {
-  let fn = native ? JSON.stringify : getOptions().stringifyFunction
-  return fn(obj, ignoreNulls, '  ')
+  if (native) {
+    return JSON.stringify(obj, ignoreNulls, '  ')
+  } else {
+    let json = getOptions().stringifyFunction(obj, ignoreNulls, '  ')
+    return JSON.stringify(JSON.parse(json), ignoreNulls, '  ')
+  }
 };
