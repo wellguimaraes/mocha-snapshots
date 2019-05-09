@@ -14,6 +14,14 @@ function MyReactComponent() {
   )
 }
 
+function MyReactComponentWithSpecialCharacters({argument}) {
+  return (
+    <div className="abc-123-45" argument={argument}>
+      Lorem Ipsum dolor {argument} ""
+    </div>
+  )
+}
+
 describe('matchSnapshot', () => {
   describe('multiple tests with same it() title', () => {
     describe('title one', () => {
@@ -35,6 +43,12 @@ describe('matchSnapshot', () => {
     expect(wrapper).to.matchSnapshot()
     expect(123).to.matchSnapshot()
     expect({ a: 1, b: { c: 'lorem' } }).to.matchSnapshot()
+  })
+
+  it('should match snapshots with double quotes', () => {
+    const wrapper = shallow(<MyReactComponentWithSpecialCharacters argument={'""'} />)
+
+    expect(wrapper).to.matchSnapshot()
   })
 
   it('should match snapshots without classNames sanitization', () => {
