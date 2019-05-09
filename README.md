@@ -6,7 +6,7 @@ Snapshot/regression testing for using with Chai, specially for React+Enzyme user
 It has incompatible difference - it uses `pretty-print` instead of JSON
 
 ## Install it
-`npm i chai-snapshots --save-dev`
+`npm i mocha-chai-snapshots --save-dev`
 
 ## Use it
 ```es6
@@ -37,12 +37,12 @@ describe('<MyComponent />', () => {
 ## Run your tests
 Add a require argument to your test script/command 
 
-`mocha --require chai-snapshots`
+`mocha --require mocha-chai-snapshots`
 
 ## Disable classNames cleanup
 To prevent false mismatches, mocha-snapshots sanitizes className props by default. You can disable this behavior before running your tests:
 ```js
-import mochaSnapshots from 'chai-snapshots';
+import mochaSnapshots from 'mocha-chai-snapshots';
 
 mochaSnapshots.setup({ sanitizeClassNames: false })
 ```
@@ -51,9 +51,9 @@ mochaSnapshots.setup({ sanitizeClassNames: false })
 Set an environment variable `UPDATE` and run your test script or add the flag `--update`  when running Mocha:
 
 ```
-UPDATE=1 mocha --require chai-snapshots
+UPDATE=1 mocha --require mocha-chai-snapshots
 ``` 
 or
 ```
-mocha --require chai-snapshots --update
+mocha --require mocha-chai-snapshots --update
 ```

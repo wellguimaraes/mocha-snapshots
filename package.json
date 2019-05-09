@@ -1,5 +1,5 @@
 {
-  "name": "chai-snapshots",
+  "name": "mocha-chai-snapshots",
   "version": "1.0.0",
   "description": "Snapshot testing for Mocha + Chai users",
   "main": "./src/index.js",
@@ -12,6 +12,7 @@
   },
   "keywords": [
     "mocha",
+    "chai",
     "snapshot",
     "regression",
     "test",
