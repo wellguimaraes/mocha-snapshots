@@ -23,9 +23,9 @@ module.exports = function (value, context) {
   let snapDidChange = true
 
   if (snaps.hasOwnProperty(testName)) {
-    const existingSnap = stringify(snaps[ testName ])
+    const existingSnap = snaps[ testName ]
     const newSnap      = stringify(target)
-    const diffResult   = jsDiff.diffLines(existingSnap, newSnap)
+    const diffResult   = jsDiff.diffLines(existingSnap, newSnap, { ignoreWhitespace: true, newlineIsToken: true })
 
     snapDidChange = diffResult.some(it => it.removed || it.added)
 
@@ -36,7 +36,7 @@ module.exports = function (value, context) {
   }
 
   if (snapDidChange) {
-    snaps[ testName ] = target
+    snaps[ testName ] = stringify(target)
     persistSnaps(snaps, snapshotFilePath)
   }
 }

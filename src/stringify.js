@@ -1,8 +1,12 @@
-function ignoreNulls(key,value) {
-  if (value === null) return undefined
-  return value
-}
+const prettyFormat = require('pretty-format');
+const ReactElement = prettyFormat.plugins.ReactElement;
+const ReactTestComponent = prettyFormat.plugins.ReactTestComponent;
+
 
 module.exports = function stringify(obj) {
-  return JSON.stringify(obj, ignoreNulls, '  ');
+  if (typeof obj === "string")
+      return obj;
+  return prettyFormat(obj, {
+      plugins: [ReactElement, ReactTestComponent],
+  });
 };
