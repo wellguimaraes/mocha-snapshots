@@ -6,7 +6,7 @@ module.exports = function(snapshotDir, snapshotFilePath) {
 
   if (!fs.existsSync(snapshotDir)) {
     checkCI();
-    fs.mkdirSync(snapshotDir);
+    fs.mkdirSync(snapshotDir, {recursive: true});
   }
 
   if (fs.existsSync(snapshotFilePath))
