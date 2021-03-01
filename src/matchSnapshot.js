@@ -10,7 +10,7 @@ const getOptions          = require('./setup').getOptions
 
 const snapshotExtension     = '.mocha-snapshot'
 const snapshotsFolder       = '__snapshots__'
-const shouldUpdateSnapshots = process.env.UPDATE || process.argv.includes('--update')
+const shouldUpdateSnapshots = parseInt(process.env.UPDATE, 10) || process.argv.includes('--update')
 
 module.exports = function (value, context) {
   const options          = getOptions()
