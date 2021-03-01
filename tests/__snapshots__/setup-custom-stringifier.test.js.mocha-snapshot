@@ -1,0 +1,5 @@
+exports["setup custom stringifier/should match snapshots with a custom stringify function(0)"] = {
+  "test": "one",
+  "a": "whatever"
+};
+

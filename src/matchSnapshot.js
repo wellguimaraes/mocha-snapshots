@@ -6,24 +6,26 @@ const getExistingSnaps    = require('./getExistingSnaps')
 const getNormalizedTarget = require('./getNormalizedTarget')
 const persistSnaps        = require('./persistSnaps')
 const getTestName         = require('./getTestName')
+const getOptions          = require('./setup').getOptions
 
 const snapshotExtension     = '.mocha-snapshot'
 const snapshotsFolder       = '__snapshots__'
 const shouldUpdateSnapshots = process.env.UPDATE || process.argv.includes('--update')
 
 module.exports = function (value, context) {
+  const options          = getOptions()
   const dirName          = path.dirname(context.runnable.file)
   const fileName         = path.basename(context.runnable.file)
   const snapshotDir      = path.join(dirName, snapshotsFolder)
   const snapshotFilePath = path.join(snapshotDir, fileName + snapshotExtension)
   const testName         = getTestName(context) + '(' + (context.titleIndex++) + ')'
   const snaps            = getExistingSnaps(snapshotDir, snapshotFilePath)
-  const target           = getNormalizedTarget(value)
+  const target           = options.normalize ? getNormalizedTarget(value) : value
 
   let snapDidChange = true
 
   if (snaps.hasOwnProperty(testName)) {
-    const existingSnap = stringify(snaps[ testName ])
+    const existingSnap = stringify(snaps[ testName ], true)
     const newSnap      = stringify(target)
     const diffResult   = jsDiff.diffLines(existingSnap, newSnap)
 
